@@ -2,6 +2,13 @@
 
 Raspberry Pi fan controller.
 
+Added features:
+1. Start log file, 
+2. loop logs, 
+3. start fan run for 15 seconds to be sure it is working, 
+4. different method of temperature measuring (more general for other rpi OS like Ubuntu)
+5. added chmod to be able to read and write gpio on Ubuntu
+
 ## Description
 
 This repository provides scripts that can be run on the Raspberry Pi that will
