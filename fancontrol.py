@@ -16,6 +16,8 @@ TEMPERATUR_SYS_PATH='/sys/class/thermal/thermal_zone0/temp'
 
 def log_time(file_path,mode='w'): #  'a+' for append
 
+        temp = get_temp()
+
         x=datetime.datetime.today()
         time_format='%Y-%m-%d %H:%M:%S'
 
@@ -23,7 +25,7 @@ def log_time(file_path,mode='w'): #  'a+' for append
 
         with open(file_path, mode) as f:
 
-                f.write(x1+'\n')
+                f.write(x1+' '+str(temp)+'\n')
                 f.close()
 
 
@@ -46,15 +48,16 @@ def get_temp():
         except (IndexError, ValueError):
                 raise RuntimeError('Could not parse temperature output.')
 
-                
-                
-                
+
+
+
+
 
 if __name__ == '__main__':
 
         tmp=subprocess.run(['sudo','chmod','o+rw','/dev/gpiomem'],capture_output=True)
 
-        log_time('last_start.txt')
+        log_time('started.txt')
         # Validate the on and off thresholds
         if OFF_THRESHOLD >= ON_THRESHOLD:
                 raise RuntimeError('OFF_THRESHOLD must be less than ON_THRESHOLD')
@@ -65,10 +68,10 @@ if __name__ == '__main__':
         fan.on()
         time.sleep(15)
         fan.off()
+        log_time('loops.txt','w')
 
 
         while True:
-                log_time('last_loop.txt','a+')
 
                 temp = get_temp()
                 # Start the fan if the temperature has reached the limit and the fan
@@ -83,3 +86,7 @@ if __name__ == '__main__':
                         fan.off()
 
                 time.sleep(SLEEP_INTERVAL)
+
+                log_time('loops.txt','a+')
+
+
